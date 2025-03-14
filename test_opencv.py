@@ -1,3 +1,3 @@
 import cv2
 print("GeeksForGeeks")
-print("Your OpenCV version is: " + cv2.__version__)
+print("Your OpenCV version : " + cv2.__version__)
