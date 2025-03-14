@@ -10,7 +10,7 @@ mp_draw = mp.solutions.drawing_utils
 hands = mp_hands.Hands(max_num_hands=1, min_detection_confidence=0.5, min_tracking_confidence=0.5)
 
 # Création du dossier pour stocker les données
-DATASET_DIR = "Datasets/"
+DATASET_DIR = "Datasets/Landmarks/"
 if not os.path.exists(DATASET_DIR):
     os.makedirs(DATASET_DIR)
 
