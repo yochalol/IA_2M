@@ -1,37 +1,41 @@
 import os
 import cv2
 
-# 📂 Dossier contenant les images (modifie le chemin si besoin)
-image_base_path = "../Datasets/Rock-Paper-Scissors/train/"
+# 📂 Base du dataset (modifie si besoin)
+dataset_base_path = "../Datasets/Rock-Paper-Scissors"
 
+# Catégories d'étiquettes
 labels = ["rock", "paper", "scissors"]
+
+# Dictionnaire pour stocker les tailles
 image_sizes = {}
 
-# 📏 Vérifier la taille de toutes les images
-for label in labels:
-    image_folder = os.path.join(image_base_path, label)
+# 🔁 Parcours tous les sous-dossiers (train, validation, test, etc.)
+for root, dirs, files in os.walk(dataset_base_path):
+    for file in files:
+        if file.endswith((".png", ".jpg", ".jpeg")):
+            img_path = os.path.join(root, file)
 
-    for image_name in os.listdir(image_folder):
-        img_path = os.path.join(image_folder, image_name)
+            # Vérifier si le fichier appartient à une des catégories
+            if not any(label in img_path.lower() for label in labels):
+                continue  # On ignore les fichiers hors catégories
 
-        # Charger l’image
-        img = cv2.imread(img_path)
+            img = cv2.imread(img_path)
 
-        # Vérifier si l’image est bien chargée
-        if img is None:
-            print(f"❌ Impossible de charger {img_path}")
-            continue
+            if img is None:
+                print(f"❌ Impossible de charger {img_path}")
+                continue
 
-        # Récupérer la taille
-        height, width, _ = img.shape
-        size = (width, height)
+            # Taille de l’image
+            height, width, _ = img.shape
+            size = (width, height)
 
-        # Stocker les tailles uniques
-        if size not in image_sizes:
-            image_sizes[size] = 0
-        image_sizes[size] += 1
+            # Stockage
+            if size not in image_sizes:
+                image_sizes[size] = 0
+            image_sizes[size] += 1
 
-# 📊 Afficher les tailles d’images trouvées
-print("📌 Tailles d'images dans le dataset :")
+# ✅ Résultat final
+print("\n📌 Tailles d'images trouvées dans le dataset :")
 for size, count in image_sizes.items():
-    print(f"📏 {size} pixels → {count} images")
+    print(f"📏 {size} pixels → {count} image(s)")

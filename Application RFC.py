@@ -1,7 +1,6 @@
 import cv2
-import mediapipe as mp
-import numpy as np
 import joblib
+import mediapipe as mp
 
 # Charger le modèle Random Forest
 model = joblib.load("random_forest_model.pkl")
