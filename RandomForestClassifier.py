@@ -1,3 +1,4 @@
+import joblib
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
@@ -23,6 +24,10 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 # 🌲 Initialiser et entraîner le modèle Random Forest
 clf = RandomForestClassifier(n_estimators=100, random_state=42)
 clf.fit(X_train, y_train)
+
+joblib.dump(clf, "random_forest_model.pkl")          # Sauvegarde du modèle
+joblib.dump(le, "label_encoder.pkl")                 # 🔄 Sauvegarde du label encoder
+
 
 # 📊 Prédire et évaluer
 y_pred = clf.predict(X_test)
