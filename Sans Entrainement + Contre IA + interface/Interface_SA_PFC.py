@@ -20,43 +20,34 @@ webcam_window = None
 
 def capture_video(new_window_label):
     global video_en_cours
-    if video_en_cours:  # Vérifie si la caméra est allumée
-        ret, frame = cap.read()  # Capture une image
+    if video_en_cours:
+        ret, frame = cap.read()
         if ret:
-            # Convertir l'image BGR (OpenCV) en RGB (Tkinter)
             frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             img = Image.fromarray(frame_rgb)
-
-            # Redimensionner l'image pour qu'elle corresponde à la taille du label
             img = img.resize((640, 480), Image.Resampling.LANCZOS)
-
-            # Convertir l'image pour Tkinter
             imgtk = ImageTk.PhotoImage(image=img)
 
-            # Mettre à jour l'image du label dans la nouvelle fenêtre
             new_window_label.imgtk = imgtk
             new_window_label.configure(image=imgtk)
 
-        # Rappeler cette fonction toutes les 10ms pour un flux vidéo continu
-        new_window_label.after(10, capture_video, new_window_label)
+        new_window_label.after(10, capture_video, new_window_label)#  les 10ms pour un flux vidéo continu
 
 
 def ouvrir_nouvelle_fenetre():
     global cap, video_en_cours, webcam_window
-    cap = cv2.VideoCapture(0)  # Initialiser la caméra
+    cap = cv2.VideoCapture(0)
     if cap.isOpened():
-        video_en_cours = True  # Indiquer que la caméra est allumée
+        video_en_cours = True
         print("Caméra allumée.")
-        # Créer une nouvelle fenêtre pour la webcam
-        webcam_window = tk.Toplevel()  # Créer une nouvelle fenêtre
-        webcam_window.title("Webcam en dehors de l'interface")
-        webcam_window.geometry("640x480")  # Taille de la nouvelle fenêtre
 
-        # Créer un label pour afficher l'image de la webcam dans la nouvelle fenêtre
+        webcam_window = tk.Toplevel()
+        webcam_window.title("Webcam en dehors de l'interface")
+        webcam_window.geometry("640x480")
+
         new_window_label = tk.Label(webcam_window)
         new_window_label.pack()
 
-        # Démarrer la capture vidéo dans la nouvelle fenêtre
         capture_video(new_window_label)
     else:
         print("Erreur : Impossible d'ouvrir la caméra.")
@@ -344,11 +335,11 @@ def eteindre_camera():
     global cap, video_en_cours, webcam_window
     if cap and cap.isOpened():
         cap.release()
-        video_en_cours = False  # Arrêter le flux vidéo
+        video_en_cours = False
         print("Caméra éteinte.")
-        if webcam_window:  # Si la fenêtre webcam existe
-            webcam_window.destroy()  # Fermer la fenêtre de la webcam
-            webcam_window = None  # Réinitialiser la variable
+        if webcam_window:
+            webcam_window.destroy()
+            webcam_window = None
     else:
         print("La caméra n'était pas allumée.")
 
