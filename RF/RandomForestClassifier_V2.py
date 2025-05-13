@@ -4,9 +4,9 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
 
 # Chargement des datasets
-df_train = pd.read_csv("./Datasets/Landmarks/landmarks_dataset_V2_train.csv")
-df_val = pd.read_csv("./Datasets/Landmarks/landmarks_dataset_V2_validation.csv")
-df_test = pd.read_csv("./Datasets/Landmarks/landmarks_dataset_V2.csv")  # optionnel
+df_train = pd.read_csv("../Datasets/Landmarks/landmarks_dataset_V2_train.csv")
+df_val = pd.read_csv("../Datasets/Landmarks/landmarks_dataset_V2_validation.csv")
+df_test = pd.read_csv("../Datasets/Landmarks/landmarks_dataset_V2.csv")  # optionnel
 
 # Fusionner train + val (ou les garder séparés)
 df_all = pd.concat([df_train, df_val], ignore_index=True)
@@ -62,5 +62,5 @@ model = RandomForestClassifier()
 model.fit(X_train, y_train)
 
 # Sauvegarde du modèle
-with open("random_forest_model.pkl", "wb") as f:
+with open("../RF/random_forest_model.pkl", "wb") as f:
     pickle.dump(model, f)

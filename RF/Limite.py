@@ -5,7 +5,7 @@ import pickle
 import matplotlib.pyplot as plt
 
 # Charger le modèle
-with open("random_forest_model.pkl", "rb") as f:
+with open("../random_forest_model.pkl", "rb") as f:
     model = pickle.load(f)
 
 # MediaPipe init
