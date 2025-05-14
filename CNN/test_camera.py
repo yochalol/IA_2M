@@ -6,24 +6,19 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 from tensorflow.keras.models import load_model
 
-# Charger le modèle CNN
 model = load_model("modele_CNN.h5")
 
-# Charger le LabelEncoder et le scaler utilisés lors de l'entraînement
 with open('label_encoder.pkl', 'rb') as f:
     label_encoder = pickle.load(f)
 with open('scaler.pkl', 'rb') as f:
     scaler = pickle.load(f)
 
-# MediaPipe init
 mp_hands = mp.solutions.hands
 hands = mp_hands.Hands(max_num_hands=1, min_detection_confidence=0.7)
 mp_draw = mp.solutions.drawing_utils
 
-# Labels des classes
 labels = ["paper", "rock", "scissors"]
 
-# Setup matplotlib
 plt.ion()
 fig, ax = plt.subplots()
 bar_container = ax.bar(labels, [0, 0, 0], color=["skyblue", "lightcoral", "lightgreen"])
@@ -31,7 +26,6 @@ ax.set_ylim(0, 100)
 ax.set_ylabel("Probabilité (%)")
 plt.title("Prédiction temps réel")
 
-# Webcam
 cap = cv2.VideoCapture(0)
 
 while True:
@@ -48,36 +42,26 @@ while True:
         for hand_landmarks in result.multi_hand_landmarks:
             mp_draw.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
 
-            # Extraction des landmarks
             landmark_list = []
             for lm in hand_landmarks.landmark:
                 landmark_list.extend([lm.x, lm.y, lm.z])
 
             if len(landmark_list) == 63:
-                # Normaliser les landmarks
                 landmark_list_scaled = scaler.transform([landmark_list])
-
-                # Prédiction du modèle CNN
                 prediction = model.predict(landmark_list_scaled)[0]
-
-                # Afficher les résultats de la prédiction sur l'image
                 y_offset = 10
                 for i, label in enumerate(labels):
                     percent = int(prediction[i] * 100)
                     text = f"{label}: {percent}%"
                     cv2.putText(frame, text, (10, height - y_offset), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
                     y_offset += 30
-
-                # MAJ du graphe matplotlib
                 for rect, prob in zip(bar_container, prediction):
                     rect.set_height(prob * 100)
                 fig.canvas.draw()
                 fig.canvas.flush_events()
 
-    # Affichage de l'image
     cv2.imshow("Rock Paper Scissors - Live", frame)
 
-    # Quitter si on appuie sur 'q'
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 

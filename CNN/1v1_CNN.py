@@ -4,22 +4,17 @@ import numpy as np
 import pickle
 from tensorflow.keras.models import load_model
 
-# Chargement du modèle et des préprocesseurs
 model = load_model("modele_CNN.h5")
 with open("scaler.pkl", "rb") as f:
     scaler = pickle.load(f)
 with open("label_encoder.pkl", "rb") as f:
     label_encoder = pickle.load(f)
-
-# Labels
 labels = label_encoder.classes_
 
-# MediaPipe Hands
 mp_hands = mp.solutions.hands
 hands = mp_hands.Hands(max_num_hands=2, min_detection_confidence=0.7)
 mp_draw = mp.solutions.drawing_utils
 
-# Détection Webcam
 cap = cv2.VideoCapture(0)
 
 def predict_gesture(landmarks):
@@ -58,7 +53,7 @@ while True:
                 cv2.putText(frame, f"Joueur {i+1}: {gesture}", (10, 30 + i*40),
                             cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
-    # Affichage du résultat
+
     if len(gestures) == 2 and all(gestures):
         winner = determine_winner(gestures[0], gestures[1])
         cv2.putText(frame, f"Gagnant: {winner}", (10, height - 30),

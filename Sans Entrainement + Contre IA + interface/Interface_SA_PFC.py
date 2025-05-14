@@ -10,7 +10,6 @@ from PIL import Image, ImageTk
 
 ######################## INITIALISATION ################################
 
-# Variable globale pour la caméra
 cap = None
 jeu_en_cours = False  # Global flag
 jeu_1v1_en_cours = False
@@ -231,10 +230,10 @@ def jeu_1v1():
             else:
                 fingers.append(0.5)
 
-        # Reconnaissance des gestes
-        if fingers == [0, 0, 0, 0, 0]:  # Les doigts sont repliés
+
+        if fingers == [0, 0, 0, 0, 0]:
             return "Pierre"
-        elif sum(fingers) >= 4.5:  # Les doigts levés
+        elif sum(fingers) >= 4.5:
             return "Feuille"
         elif fingers[1] == 1 and fingers[2] == 1 and fingers[3] == 0 and fingers[4] == 0:
             return "Ciseaux"
@@ -261,7 +260,6 @@ def jeu_1v1():
         mid_x = width // 2
         frame = cv2.flip(frame, 1)
 
-        # Conversion en RGB pour MediaPipe
         rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         results = hands.process(rgb_frame)
 
@@ -273,31 +271,30 @@ def jeu_1v1():
                 avg_x = sum([lm.x for lm in hand_landmarks.landmark]) / len(hand_landmarks.landmark)
                 hands_positions.append((avg_x, gesture))
 
-        # Trier les mains de gauche à droite
         hands_positions.sort(key=lambda x: x[0])
         gesture_left = "Aucune main"
         gesture_right = "Aucune main"
 
         if len(hands_positions) > 0:
-            gesture_left = hands_positions[0][1]  # Main la plus à gauche
+            gesture_left = hands_positions[0][1]
         if len(hands_positions) > 1:
-            gesture_right = hands_positions[1][1]  # Main la plus à droite
+            gesture_right = hands_positions[1][1]
 
         if last_gesture_time is None:
             last_gesture_time = time.time()
-        elif time.time() - last_gesture_time > 5:  # Attendre 5 secondes
+        elif time.time() - last_gesture_time > 5:
             round_result = determine_winner(gesture_left, gesture_right)
             cv2.putText(frame, f"Resultat: {round_result}", (50, height // 2), cv2.FONT_HERSHEY_COMPLEX, 1, (0, 255, 0),
                         3)
             cv2.putText(frame, " Nouveau round 'N'", (50, height - 150), cv2.FONT_HERSHEY_COMPLEX, 0.8, (0, 0, 255), 2)
             key = cv2.waitKey(1) & 0xFF
-            if key == ord('n'):  # Code ASCII pour la touche 'n'
-                last_gesture_time = time.time()  # Redémarrer le timer pour un nouveau round
+            if key == ord('n'):
+                last_gesture_time = time.time()
                 gesture_left = "Aucune main"
                 gesture_right = "Aucune main"
                 round_result = ""
 
-        # Affichage des résultats pendant le round
+
         cv2.rectangle(frame, (30, height - 90), (mid_x - 30, height - 40), (0, 0, 0), -1)  # Fond noir pour Joueur 1
         cv2.rectangle(frame, (mid_x + 30, height - 90), (width - 30, height - 40), (0, 0, 0),-1)  # Fond noir pour Joueur 2
 
@@ -321,7 +318,7 @@ def jeu_1v1():
 
 def eteindre_jeu_contre_IA():
     global jeu_en_cours
-    jeu_en_cours = False  # Cela fera sortir la boucle while dans le thread du jeu
+    jeu_en_cours = False
     print("Jeu arrêté.")
 
 
@@ -358,16 +355,13 @@ def quitter():
 
 ###################### Tkinter #####################
 
-# Créer une fenêtre Tkinter
 fenetre = tk.Tk()
 fenetre.title("Webcam")
 fenetre.geometry("800x600")
 
-# Création cadre pour la webcam + autres éléments
 frame = tk.Frame(fenetre)
 frame.pack(padx=20, pady=20)
 
-# Titre de l'interface
 titre = tk.Label(frame, text=" Bienvenue dans notre Interface IA_2M", font=("Arial", 20))
 titre.pack(pady=10)
 
@@ -400,10 +394,7 @@ button_quitter.pack(pady=10)
 
 ######################## FIN ##############################
 
-# Ouverture fenêtre
 fenetre.mainloop()
-
-# Libérer la caméra lorsque la fenêtre principale est fermée
 if cap:
     cap.release()
 
