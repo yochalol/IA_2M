@@ -7,9 +7,6 @@ import matplotlib.pyplot as plt
 # Charger le modèle
 with open("../random_forest_model.pkl", "rb") as f:
     model = pickle.load(f)
-
-# MediaPipe init
-mp_hands = mp.solutions.hands
 hands = mp_hands.Hands(max_num_hands=1, min_detection_confidence=0.7)
 mp_draw = mp.solutions.drawing_utils
 

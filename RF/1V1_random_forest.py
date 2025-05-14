@@ -27,7 +27,7 @@ def determine_winner(p1, p2):
     if p1 == p2:
         return "Egalite"
     wins = {"rock": "scissors", "scissors": "paper", "paper": "rock"}
-    return "Joueur Droit" if wins[p1] == p2 else "Joueur Gauche"
+    return "Joueur Gauche" if wins[p1] == p2 else "Joueur Droit"
 
 # Capture de la webcam
 cap = cv2.VideoCapture(0)
